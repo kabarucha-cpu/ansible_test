@@ -4,6 +4,9 @@
 [db_servers]
 192.168.56.108
 
+[workstations]
+192.168.56.109
+
 [all:vars]
 ansible_user=ansible
 

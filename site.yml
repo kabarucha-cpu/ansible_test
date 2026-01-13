@@ -25,13 +25,46 @@
       state: latest
     when: ansible_distribution == "Ubuntu"
 
+  - name: Copy defaul html file for site
+    tags: apache, apache2,
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Starting apache
+    service:
+      name: apache2
+      state: started
+      enabled: yes
+
 - hosts: db_servers
   become: true
   tasks:
 
-  - name: Install mariadb package (Ubuntu) 
+  - name: Install mariadb package (Ubuntu)
     tags: db
     apt:
       name: mariadb-server
       state: latest
     when: ansible_distribution == "Ubuntu"
+
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: Install archive unpacker
+    package:
+      name: unzip
+
+  - name: Install Terraform
+    tags: terra
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.14.3/terraform_1.14.3_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
